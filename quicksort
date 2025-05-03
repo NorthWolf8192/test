@@ -1,0 +1,46 @@
+#include <stdio.h>
+// 分区函数，返回基准的最终位置
+int partition(int arr[], int low, int high)
+{
+    int pivot = arr[low]; // 选择第一个元素作为基准，同时也备份了一开始的arr[low]，arr[low]挖出来了一个坑，所以最后会多出来一个坑；
+    while (low < high)
+    {
+        while (arr[high] >= pivot && low < high)
+            high--;
+        arr[low] = arr[high]; // 先从右到左把小于基准的high填到low
+        while (arr[low] <= pivot && low < high)
+            low++;
+        arr[high] = arr[low]; // 再从左到右把大于基准的low填到high
+    }
+    arr[low] = pivot; // 将pivot填入空出来的坑
+    return low;       // return high; 返回基准的索引
+}
+
+void quicksort(int arr[], int low, int high)
+{
+    if (low < high)
+    {
+        int pivot_pos = partition(arr, low, high);
+        quicksort(arr, low, pivot_pos - 1);  // 对基点左边的元素进行排序，即low到pivot_pos-1(基点位置已经排好,无需再排)
+        quicksort(arr, pivot_pos + 1, high); // 对基点右边的元素进行排序，即pivot_pos-1到high
+    }
+}
+int main()
+{
+    int numberofnum;
+    while (scanf("%d", &numberofnum) != EOF)
+    {
+        int num[101] = {0};
+        for (int i = 0; i < numberofnum; i++)
+        {
+            scanf("%d", &num[i]);
+        }
+        quicksort(num, 0, numberofnum - 1);
+        for (int i = 0; i < numberofnum; i++)
+        {
+            printf("%d ", num[i]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
